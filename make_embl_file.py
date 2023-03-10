@@ -36,7 +36,7 @@ types_to_keep = set(['CDS', "3'UTR", "5'UTR", 'LTR', 'gap', 'tRNA', 'rRNA',
 
 def remove_non_embl_qualfiers(feature):
     for key in ['SO', 'colour', 'controlled_curation', 'note', 'EC_number',
-                'gene', 'obsolete_name', 'GO']:
+                'gene', 'obsolete_name', 'GO', 'shared_id']:
         feature.qualifiers.pop(key, None)
 
 def add_dbxrefs(feature):
