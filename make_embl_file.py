@@ -22,8 +22,8 @@ def die(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
     sys.exit(1)
 
-if len(sys.argv) <= 2:
-    sys.exit('needs 2 arguments')
+if len(sys.argv) != 4:
+    sys.exit('needs 3 arguments: uniprot_mapping input_file output_file')
 
 uniprot_mapping_file_name = sys.argv[1]
 
@@ -34,9 +34,10 @@ with open(uniprot_mapping_file_name, mode='r') as tsvfile:
     for row in reader:
         pombe_uniprot_map[row[0]] = row[1]
 
-file_name = sys.argv[2]
+input_file_name = sys.argv[2]
+output_file_name = sys.argv[3]
 
-eprint('processing: ' + file_name)
+eprint('processing: ' + input_file_name)
 
 types_to_keep = set(['CDS', "3'UTR", "5'UTR", 'LTR', 'gap', 'tRNA', 'rRNA',
                      'ncRNA', 'lncRNA', 'sncRNA', 'snoRNA', 'snRNA'])
@@ -90,8 +91,8 @@ def process_rna(feature):
     feature.type = 'ncRNA'
     feature.qualifiers['ncRNA_class'] = feature_type
 
-with open(file_name) as contig_in:
-    contig = SeqIO.read(file_name, 'embl')
+with open(input_file_name) as contig_in:
+    contig = SeqIO.read(input_file_name, 'embl')
 
     new_features = []
 
@@ -111,4 +112,4 @@ with open(file_name) as contig_in:
 
     contig.features = new_features
 
-    SeqIO.write(contig, file_name + '.embl_fix', 'embl')
+    SeqIO.write(contig, output_file_name, 'embl')
