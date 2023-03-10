@@ -6,7 +6,7 @@
 #   cd pombe-embl
 #   for contig in *.contig
 #   do
-#      PATH_TO_POMBASE_PYTHON/make_embl_file.py ./ftp_site/pombe/names_and_identifiers/PomBase2UniProt.tsv contig > embl_resubmission/$contig
+#      PATH_TO_POMBASE_PYTHON/make_embl_file.py ./ftp_site/pombe/names_and_identifiers/PomBase2UniProt.tsv $contig embl_resubmission/$contig
 #   done
 
 import sys
