@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 
 # Read a contig file and write a EMBL format file for submission to ENA
+#
+# Run as:
+#   cd pombe-embl
+#   for contig in *.contig
+#   do
+#      PATH_TO_POMBASE_PYTHON/make_embl_file.py ./ftp_site/pombe/names_and_identifiers/PomBase2UniProt.tsv contig > embl_resubmission/$contig
+#   done
 
 import sys
 import io
