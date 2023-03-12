@@ -12,6 +12,7 @@
 import sys
 import io
 import csv
+import re
 
 from Bio import SeqIO
 
@@ -57,6 +58,11 @@ def add_dbxrefs(feature):
             db_xrefs.append('UniProtKB/Swiss-Prot:' + uniprot_id)
         feature.qualifiers['db_xrefs'] = db_xrefs
 
+def process_product(qualifiers):
+    if 'product' in qualifiers:
+        new_product = re.sub(' \(predicted\)$', '', qualifiers['product'][0])
+        qualifiers['product'][0] = new_product
+
 def process_qualifers(feature):
     remove_non_embl_qualfiers(feature)
 
@@ -79,6 +85,8 @@ def process_qualifers(feature):
     synonym = qualifiers.pop('synonym', None)
     if synonym != None:
         qualifiers['gene_synonym'] = synonym
+
+    process_product(qualifiers)
 
     add_dbxrefs(feature)
 
