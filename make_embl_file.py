@@ -92,10 +92,12 @@ def process_rna(feature):
     if 'SO' in feature.qualifiers:
         so_term = feature.qualifiers['SO'][0]
         if so_term == 'SO:0002247':
-            feature_type = 'sncRNA'
+            feature_type = None
+#            feature_type = 'sncRNA'
 
     feature.type = 'ncRNA'
-    feature.qualifiers['ncRNA_class'] = feature_type
+    if feature_type != None:
+        feature.qualifiers['ncRNA_class'] = feature_type
 
 with open(input_file_name) as contig_in:
     contig = SeqIO.read(input_file_name, 'embl')
