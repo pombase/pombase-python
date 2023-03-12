@@ -88,6 +88,12 @@ def process_ltr(feature):
 
 def process_rna(feature):
     feature_type = feature.type
+
+    if 'SO' in feature.qualifiers:
+        so_term = feature.qualifiers['SO'][0]
+        if so_term == 'SO:0002247':
+            feature_type = 'sncRNA'
+
     feature.type = 'ncRNA'
     feature.qualifiers['ncRNA_class'] = feature_type
 
@@ -100,13 +106,13 @@ with open(input_file_name) as contig_in:
         if feature.type not in types_to_keep:
             continue
 
-        process_qualifers(feature)
-
         if feature.type == 'LTR':
             process_ltr(feature)
 
-        if feature.type in ['lncRNA', 'snoRNA', 'snRNA']:
+        if feature.type in ['lncRNA', 'snoRNA', 'sncRNA', 'snRNA']:
             process_rna(feature)
+
+        process_qualifers(feature)
 
         new_features.append(feature)
 
