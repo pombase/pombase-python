@@ -101,7 +101,7 @@ def process_rna(feature):
     if 'SO' in feature.qualifiers:
         so_term = feature.qualifiers['SO'][0]
         if so_term == 'SO:0002247':
-            feature_type = 'sncRNA'
+            feature_type = 'other'
 
     feature.type = 'ncRNA'
     if feature_type != None:
