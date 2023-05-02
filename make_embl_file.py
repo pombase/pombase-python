@@ -51,12 +51,12 @@ def remove_non_embl_qualfiers(feature):
 def add_dbxrefs(feature):
     if 'locus_tag' in feature.qualifiers:
         systematic_id = feature.qualifiers['locus_tag'][0]
-        db_xrefs = feature.qualifiers.pop('db_xref', [])
-        db_xrefs.append('PomBase:' + systematic_id)
+        db_xref = feature.qualifiers.pop('db_xref', [])
+        db_xref.append('PomBase:' + systematic_id)
         if systematic_id in pombe_uniprot_map:
             uniprot_id = pombe_uniprot_map[systematic_id]
-            db_xrefs.append('UniProtKB/Swiss-Prot:' + uniprot_id)
-        feature.qualifiers['db_xrefs'] = db_xrefs
+            db_xref.append('UniProtKB/Swiss-Prot:' + uniprot_id)
+        feature.qualifiers['db_xref'] = db_xref
 
 def process_product(qualifiers):
     if 'product' in qualifiers:
