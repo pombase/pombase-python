@@ -2,7 +2,7 @@
 
 # Read a contig file and write a EMBL format file for submission to ENA
 #
-# Run as:
+# # Run as:
 #   cd pombe-embl
 #   for i in 1 2 3
 #   do
@@ -11,6 +11,11 @@
 #          embl_resubmission/CU*_chromosome$i.embl chromosome$i.contig \
 #           embl_resubmission/chromosome$i.embl
 #   done
+#
+# # then in pombe-embl/embl_resubmission run:
+#    ./chr_submit.sh
+
+
 
 import sys
 import io
