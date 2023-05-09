@@ -4,9 +4,12 @@
 #
 # Run as:
 #   cd pombe-embl
-#   for contig in *.contig
+#   for i in 1 2 3
 #   do
-#      PATH_TO_POMBASE_PYTHON/make_embl_file.py ./ftp_site/pombe/names_and_identifiers/PomBase2UniProt.tsv $contig embl_resubmission/$contig
+#      PATH_TO_POMBASE_PYTHON/make_embl_file.py \
+#          ./ftp_site/pombe/names_and_identifiers/PomBase2UniProt.tsv \
+#          embl_resubmission/CU*_chromosome$i.embl chromosome$i.contig \
+#           embl_resubmission/chromosome$i.embl
 #   done
 
 import sys
@@ -23,8 +26,8 @@ def die(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
     sys.exit(1)
 
-if len(sys.argv) != 4:
-    sys.exit('needs 3 arguments: uniprot_mapping input_file output_file')
+if len(sys.argv) != 5:
+    sys.exit('needs 4 arguments: uniprot_mapping entry_from_embl contig_file output_file')
 
 uniprot_mapping_file_name = sys.argv[1]
 
@@ -35,10 +38,24 @@ with open(uniprot_mapping_file_name, mode='r') as tsvfile:
     for row in reader:
         pombe_uniprot_map[row[0]] = row[1]
 
-input_file_name = sys.argv[2]
-output_file_name = sys.argv[3]
+entry_from_embl_file_name = sys.argv[2]
+input_file_name = sys.argv[3]
+output_file_name = sys.argv[4]
 
 eprint('processing: ' + input_file_name)
+
+protein_id_map = {}
+
+entry_from_embl = SeqIO.read(entry_from_embl_file_name, 'embl')
+
+for feature in entry_from_embl.features:
+    qualifiers = feature.qualifiers
+
+    if 'locus_tag' in qualifiers:
+        locus_tags = qualifiers['locus_tag']
+        if 'protein_id' in qualifiers:
+            protein_ids = qualifiers['protein_id']
+            protein_id_map[locus_tags[0]] = protein_ids[0]
 
 types_to_keep = set(['CDS', "3'UTR", "5'UTR", 'LTR', 'gap', 'tRNA', 'rRNA',
                      'ncRNA', 'lncRNA', 'sncRNA', 'snoRNA', 'snRNA'])
@@ -74,6 +91,9 @@ def process_qualifers(feature):
             die('too many /systematic_id qualifiers' + str(feature))
         del qualifiers['systematic_id']
         qualifiers['locus_tag'] = sys_ids
+        sys_id = sys_ids[0]
+        if sys_id in protein_id_map:
+            qualifiers['protein_id'] = protein_id_map[sys_id]
     else:
         if feature.type not in ['gap']:
             eprint('no /systematic_id in:')
