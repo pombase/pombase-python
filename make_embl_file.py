@@ -127,25 +127,24 @@ def process_rna(feature):
     if feature_type != None:
         feature.qualifiers['ncRNA_class'] = feature_type
 
-with open(input_file_name) as contig_in:
-    contig = SeqIO.read(input_file_name, 'embl')
+contig = SeqIO.read(input_file_name, 'embl')
 
-    new_features = []
+new_features = []
 
-    for feature in contig.features:
-        if feature.type not in types_to_keep:
-            continue
+for feature in contig.features:
+    if feature.type not in types_to_keep:
+        continue
 
-        if feature.type == 'LTR':
-            process_ltr(feature)
+    if feature.type == 'LTR':
+        process_ltr(feature)
 
-        if feature.type in ['lncRNA', 'snoRNA', 'sncRNA', 'snRNA']:
-            process_rna(feature)
+    if feature.type in ['lncRNA', 'snoRNA', 'sncRNA', 'snRNA']:
+        process_rna(feature)
 
-        process_qualifers(feature)
+    process_qualifers(feature)
 
-        new_features.append(feature)
+    new_features.append(feature)
 
-    contig.features = new_features
+contig.features = new_features
 
-    SeqIO.write(contig, output_file_name, 'embl')
+SeqIO.write(contig, output_file_name, 'embl')
