@@ -71,9 +71,8 @@ def remove_non_embl_qualfiers(feature):
                 'gene', 'obsolete_name', 'GO', 'shared_id']:
         feature.qualifiers.pop(key, None)
 
-def add_dbxrefs(feature):
+def add_dbxrefs(feature, systematic_id):
     if 'locus_tag' in feature.qualifiers:
-        systematic_id = feature.qualifiers['locus_tag'][0]
         db_xref = feature.qualifiers.pop('db_xref', [])
         db_xref.append('PomBase:' + systematic_id)
         if systematic_id in pombe_uniprot_map:
@@ -88,6 +87,7 @@ def process_product(qualifiers):
 
 def process_qualifers(feature):
     remove_non_embl_qualfiers(feature)
+    sys_id = None
 
     qualifiers = feature.qualifiers
     if 'systematic_id' in qualifiers:
@@ -95,8 +95,8 @@ def process_qualifers(feature):
         if len(sys_ids) > 1:
             die('too many /systematic_id qualifiers' + str(feature))
         del qualifiers['systematic_id']
-        qualifiers['locus_tag'] = sys_ids
         sys_id = sys_ids[0]
+        qualifiers['locus_tag'] = ['SPOM_' + sys_id]
         if sys_id in protein_id_map:
             qualifiers['protein_id'] = protein_id_map[sys_id]
     else:
@@ -114,7 +114,7 @@ def process_qualifers(feature):
 
     process_product(qualifiers)
 
-    add_dbxrefs(feature)
+    add_dbxrefs(feature, sys_id)
 
 def process_ltr(feature):
     feature.type = 'repeat_region'
