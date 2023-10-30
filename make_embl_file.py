@@ -112,6 +112,13 @@ def process_qualifers(feature):
     if synonym != None:
         qualifiers['gene_synonym'] = synonym
 
+    # avoid /pseudo="" in the output:
+    if 'pseudo' in qualifiers:
+        qualifiers['pseudo'] = None
+
+    if 'ribosomal_slippage' in qualifiers:
+        qualifiers['ribosomal_slippage'] = None
+
     process_product(qualifiers)
 
     add_dbxrefs(feature, sys_id)
