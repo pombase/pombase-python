@@ -106,7 +106,7 @@ def process_qualifers(feature):
 
     primary_name = qualifiers.pop('primary_name', None)
     if primary_name != None:
-        qualifiers['standard_name'] = primary_name
+        qualifiers['gene'] = primary_name[0]
 
     synonym = qualifiers.pop('synonym', None)
     if synonym != None:
