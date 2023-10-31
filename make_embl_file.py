@@ -100,6 +100,7 @@ def process_qualifers(feature):
             die('too many /systematic_id qualifiers' + str(feature))
         del qualifiers['systematic_id']
         sys_id = sys_ids[0]
+
         qualifiers['locus_tag'] = ['SPOM_' + sys_id]
         if sys_id in protein_id_map:
             qualifiers['protein_id'] = protein_id_map[sys_id]
@@ -147,6 +148,8 @@ contig = SeqIO.read(input_file_name, 'embl')
 
 new_features = []
 
+seen_feature_locs = {}
+
 for feature in contig.features:
     if feature.type not in types_to_keep:
         continue
@@ -159,7 +162,16 @@ for feature in contig.features:
 
     process_qualifers(feature)
 
-    new_features.append(feature)
+    key = feature.type + '--' + str(feature.location)
+
+    if key in seen_feature_locs and (feature.type == "5'UTR" or feature.type == "3'UTR"):
+        print('ígnoring duplicate: ' + key)
+    else:
+        if key in seen_feature_locs:
+            print("warning: found duplicate feature that isn't a UTR: " + str(feature))
+
+        seen_feature_locs[key] = True
+        new_features.append(feature)
 
 contig.features = new_features
 
