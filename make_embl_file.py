@@ -101,6 +101,9 @@ def process_qualifers(feature):
         del qualifiers['systematic_id']
         sys_id = sys_ids[0]
 
+        if feature.type in ['CDS', 'mRNA', "5'UTR", "3'UTR"]:
+            sys_id = re.sub(r"\.\d$", '', sys_id)
+
         qualifiers['locus_tag'] = ['SPOM_' + sys_id]
         if sys_id in protein_id_map:
             qualifiers['protein_id'] = protein_id_map[sys_id]
