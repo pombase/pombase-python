@@ -76,7 +76,7 @@ def process_dbxrefs(feature, systematic_id):
 
     if 'locus_tag' in feature.qualifiers:
         db_xrefs.append('PomBase:' + systematic_id)
-        if systematic_id in pombe_uniprot_map:
+        if systematic_id in pombe_uniprot_map and feature.type not in ["5'UTR", "3'UTR"]:
             uniprot_id = pombe_uniprot_map[systematic_id]
             db_xrefs.append('UniProtKB/Swiss-Prot:' + uniprot_id)
 
@@ -105,7 +105,7 @@ def process_qualifers(feature):
             sys_id = re.sub(r"\.\d$", '', sys_id)
 
         qualifiers['locus_tag'] = ['SPOM_' + sys_id]
-        if sys_id in protein_id_map:
+        if sys_id in protein_id_map and feature.type not in ["5'UTR", "3'UTR"]:
             qualifiers['protein_id'] = protein_id_map[sys_id]
     else:
         if feature.type not in ['gap']:
