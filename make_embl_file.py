@@ -88,6 +88,9 @@ def process_product(qualifiers):
         new_product = re.sub(' \(predicted\)$', '', qualifiers['product'][0])
         qualifiers['product'][0] = new_product
 
+def is_utr(feature):
+    return feature.type in ["5'UTR", "3'UTR"]
+
 def process_qualifers(feature):
     remove_non_embl_qualfiers(feature)
     sys_id = None
@@ -104,7 +107,7 @@ def process_qualifers(feature):
             sys_id = re.sub(r"\.\d$", '', sys_id)
 
         qualifiers['locus_tag'] = ['SPOM_' + sys_id]
-        if sys_id in protein_id_map and feature.type not in ["5'UTR", "3'UTR"]:
+        if sys_id in protein_id_map and not is_utr(feature):
             qualifiers['protein_id'] = protein_id_map[sys_id]
     else:
         if feature.type not in ['gap']:
@@ -112,11 +115,11 @@ def process_qualifers(feature):
             sys.exit(feature)
 
     primary_name = qualifiers.pop('primary_name', None)
-    if primary_name != None:
+    if primary_name != None and not is_utr(feature):
         qualifiers['gene'] = primary_name[0]
 
     synonym = qualifiers.pop('synonym', None)
-    if synonym != None:
+    if synonym != None and not is_utr(feature):
         qualifiers['gene_synonym'] = synonym
 
     # avoid /pseudo="" in the output:
