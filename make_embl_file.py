@@ -174,10 +174,11 @@ for feature in contig.features:
     key = feature.type + '--' + str(feature.location)
 
     if key in seen_feature_locs and (feature.type == "5'UTR" or feature.type == "3'UTR"):
-        print('ígnoring duplicate: ' + key)
+        print('warning: ígnoring duplicate: ' + key)
     else:
         if key in seen_feature_locs:
-            print("warning: found duplicate feature that isn't a UTR: " + str(feature))
+            print("warning: found duplicate feature that isn't a UTR: " +
+                  f"{feature.type} {feature.location}")
 
         seen_feature_locs[key] = True
         new_features.append(feature)
