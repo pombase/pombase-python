@@ -21,6 +21,9 @@ import sys
 import io
 import csv
 import re
+import warnings
+
+warnings.filterwarnings('ignore', '.*Non-standard molecule type: genomic DNA.*',)
 
 from Bio import SeqIO
 
