@@ -103,11 +103,15 @@ def process_qualifers(feature):
         del qualifiers['systematic_id']
         sys_id = sys_ids[0]
 
+        original_sys_id = sys_id
+
         if feature.type in ['CDS', 'mRNA', "5'UTR", "3'UTR"]:
             sys_id = re.sub(r"\.\d$", '', sys_id)
 
+        is_first_transcript = original_sys_id == sys_id or original_sys_id.endswith('.1')
+
         qualifiers['locus_tag'] = ['SPOM_' + sys_id]
-        if sys_id in protein_id_map and not is_utr(feature):
+        if is_first_transcript and sys_id in protein_id_map and not is_utr(feature):
             qualifiers['protein_id'] = protein_id_map[sys_id]
     else:
         if feature.type not in ['gap']:
